@@ -38,6 +38,8 @@ class TindHook(BaseHook):
     def get_conn(self) -> TINDClient:
         """Return a new TINDClient build from the Airflow Connection."""
         connection = self.get_connection(self.conn_id)
+        assert connection.host is not None
+        assert connection.password is not None
         return TINDClient(
             api_url=connection.host,
             api_key=connection.password,
@@ -54,7 +56,7 @@ class TindHook(BaseHook):
             # need a better connection test call
             self.conn.fetch_ids_search("farm mokelumne")
             return True, "Connection successful!"
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             return False, str(e)
 
     def get_ids(self, tind_query: str) -> list[str]:
@@ -75,7 +77,7 @@ class TindHook(BaseHook):
             return {}
         return metadata[0]
 
-    def download_image_file(self, tind_id: str, run_id: str) -> str:
+    def download_image_file(self, tind_id: str, _run_id: str) -> str:
         """Download the first file attachment for a given TIND ID."""
         metadata = self.get_first_file_metadata(tind_id)
         download_url = metadata["url"]
@@ -83,7 +85,7 @@ class TindHook(BaseHook):
         return self.conn.fetch_file(download_url, str(record_path))
 
     def download_image_from_record_sized(
-        self, tind_id: str, run_id: str, width: int, height: int
+        self, tind_id: str, _run_id: str, width: int, height: int
     ) -> str:
         """Download the first image for a given TIND ID with the given size.
 
@@ -116,7 +118,7 @@ class TindHook(BaseHook):
         )
         data.raise_for_status()
 
-        output_path = record_dir(tind_id) / image.image_id
+        output_path = record_dir(tind_id) / str(image.image_id)
         with output_path.open("wb") as out_f:
             for chunk in data.iter_content():
                 out_f.write(chunk)

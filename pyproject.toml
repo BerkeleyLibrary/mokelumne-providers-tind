@@ -44,6 +44,8 @@ python_version = "3.13"
 warn_unused_configs = true
 warn_redundant_casts = true
 warn_return_any = true
+# Needed for piffle.
+follow_untyped_imports = true
 
 [tool.setuptools.packages.find]
 include = ['mokelumne-providers-tind']
