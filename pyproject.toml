@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mokelumne-providers-tind"
-version = "1.0.1"
+version = "1.0.3"
 dependencies = [
     "apache-airflow-task-sdk == 1.2.2",
     "piffle",  # IIIF API used in batch image description DAG
