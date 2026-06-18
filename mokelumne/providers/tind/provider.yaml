@@ -1,4 +1,4 @@
-package-name: mokelumne
+package-name: mokelumne-providers-tind
 name: Tind
 description: Tind Airflow provider.
 connection-types:
